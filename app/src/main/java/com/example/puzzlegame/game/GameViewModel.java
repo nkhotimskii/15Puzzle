@@ -306,7 +306,9 @@ public class GameViewModel extends AndroidViewModel {
     }
 
     private void saveGame() {
-        if (board.isSolved() && solvedHandled) {
+        // A game that has already been won must never be resumed, otherwise the
+        // same game could be won twice and "Games Won" would outgrow "Games Played".
+        if (solvedHandled) {
             repository.clearGame();
             return;
         }
