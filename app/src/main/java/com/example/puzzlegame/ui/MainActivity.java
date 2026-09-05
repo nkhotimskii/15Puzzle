@@ -4,15 +4,18 @@ import android.os.Bundle;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.puzzlegame.R;
 import com.example.puzzlegame.game.Direction;
@@ -34,17 +37,13 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
 
     private String currentTime = "0:00";
 
-    private final ActivityResultLauncher<String> pickImage =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-                if (uri != null) {
-                    viewModel.playImage(uri);
-                }
-            });
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        View root = findViewById(R.id.root);
+        applyWindowInsets(root);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,9 +63,16 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
         observeViewModel();
     }
 
+    private void applyWindowInsets(View root) {
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
+    }
+
     private void observeViewModel() {
         viewModel.getBoardState().observe(this, puzzleView::setBoardState);
-        viewModel.getTileImages().observe(this, puzzleView::setTileImages);
 
         viewModel.getMoves().observe(this, moves -> {
             if (moves != null) {
@@ -89,21 +95,12 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
 
         viewModel.getDifficulty().observe(this, difficulty -> invalidateOptionsMenu());
 
-        viewModel.getImageMode().observe(this, imageMode -> invalidateOptionsMenu());
-
         viewModel.getMoveEvent().observe(this, move -> {
             puzzleView.animateMove(move);
             onMoveFeedback(move);
         });
 
         viewModel.getSolvedEvent().observe(this, this::showSolvedDialog);
-
-        viewModel.getImageErrorEvent().observe(this, ignored ->
-                new MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.image_error_title)
-                        .setMessage(R.string.image_error_message)
-                        .setPositiveButton(android.R.string.ok, null)
-                        .show());
     }
 
     private void onMoveFeedback(Move move) {
@@ -146,8 +143,6 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         Difficulty difficulty = viewModel.getDifficulty().getValue();
-        boolean imageMode = Boolean.TRUE.equals(viewModel.getImageMode().getValue());
-
         if (difficulty == Difficulty.EASY) {
             menu.findItem(R.id.menu_easy).setChecked(true);
         } else if (difficulty == Difficulty.HARD) {
@@ -155,9 +150,6 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
         } else {
             menu.findItem(R.id.menu_normal).setChecked(true);
         }
-
-        menu.findItem(R.id.menu_image).setChecked(imageMode);
-        menu.findItem(R.id.menu_numbers).setChecked(!imageMode);
         return true;
     }
 
@@ -172,12 +164,6 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
             return true;
         } else if (id == R.id.menu_hard) {
             viewModel.selectDifficulty(Difficulty.HARD);
-            return true;
-        } else if (id == R.id.menu_numbers) {
-            viewModel.playNumbers();
-            return true;
-        } else if (id == R.id.menu_image) {
-            pickImage.launch("image/*");
             return true;
         } else if (id == R.id.menu_settings) {
             startActivity(SettingsActivity.newIntent(this));

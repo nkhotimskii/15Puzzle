@@ -11,9 +11,6 @@
     <string name="solved_message">You solved the puzzle in %1$d moves in %2$s.</string>
 
     <string name="menu_difficulty">Difficulty</string>
-    <string name="menu_mode">Mode</string>
-    <string name="menu_numbers">Numbers</string>
-    <string name="menu_image">Image</string>
     <string name="menu_settings">Settings</string>
 
     <string name="difficulty_easy">3×3 (Easy)</string>
@@ -31,7 +28,4 @@
     <string name="best_times_none">No records yet</string>
     <string name="reset_stats">Reset statistics</string>
     <string name="reset_stats_confirm">Reset all statistics and best times?</string>
-
-    <string name="image_error_title">Couldn\'t load image</string>
-    <string name="image_error_message">That image couldn\'t be opened. Please try another one.</string>
 </resources>

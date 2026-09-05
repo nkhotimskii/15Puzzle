@@ -11,9 +11,6 @@
     <string name="solved_message">Вы собрали головоломку за %1$d ходов за %2$s.</string>
 
     <string name="menu_difficulty">Сложность</string>
-    <string name="menu_mode">Режим</string>
-    <string name="menu_numbers">Числа</string>
-    <string name="menu_image">Картинка</string>
     <string name="menu_settings">Настройки</string>
 
     <string name="difficulty_easy">3×3 (Легко)</string>
@@ -31,7 +28,4 @@
     <string name="best_times_none">Пока нет рекордов</string>
     <string name="reset_stats">Сбросить статистику</string>
     <string name="reset_stats_confirm">Сбросить всю статистику и рекорды?</string>
-
-    <string name="image_error_title">Не удалось загрузить изображение</string>
-    <string name="image_error_message">Не удалось открыть это изображение. Попробуйте другое.</string>
 </resources>

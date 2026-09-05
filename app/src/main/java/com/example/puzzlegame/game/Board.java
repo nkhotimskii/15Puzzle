@@ -1,7 +1,5 @@
 package com.example.puzzlegame.game;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.Random;
 
 /**
@@ -21,7 +19,6 @@ public class Board {
     private final int[] tiles;
     private int emptyIndex;
     private final Random random = new Random();
-    private final Deque<Integer> history = new ArrayDeque<>();
 
     public Board(int size) {
         if (size < 2) {
@@ -48,7 +45,6 @@ public class Board {
         }
         tiles[cellCount - 1] = EMPTY;
         emptyIndex = cellCount - 1;
-        history.clear();
     }
 
     /**
@@ -91,8 +87,7 @@ public class Board {
     }
 
     /**
-     * Moves the tile at {@code index} into the empty slot and records the move
-     * so it can be undone later.
+     * Moves the tile at {@code index} into the empty slot.
      *
      * @return true if the move was valid and applied.
      */
@@ -100,24 +95,10 @@ public class Board {
         if (!canMove(index)) {
             return false;
         }
-        history.push(emptyIndex);
-        performMove(index);
+        tiles[emptyIndex] = tiles[index];
+        tiles[index] = EMPTY;
+        emptyIndex = index;
         return true;
-    }
-
-    /**
-     * Reverses the most recent move.
-     *
-     * @return the index of the tile that moved back, or -1 if there was no move
-     *         to undo.
-     */
-    public int undo() {
-        if (history.isEmpty()) {
-            return -1;
-        }
-        int prevEmpty = history.pop();
-        performMove(prevEmpty);
-        return prevEmpty;
     }
 
     /** True when every tile is in its home position. */
@@ -128,10 +109,6 @@ public class Board {
             }
         }
         return tiles[cellCount - 1] == EMPTY;
-    }
-
-    public boolean canUndo() {
-        return !history.isEmpty();
     }
 
     /** Returns a copy of the current tile layout. */
@@ -153,12 +130,6 @@ public class Board {
                 break;
             }
         }
-    }
-
-    private void performMove(int index) {
-        tiles[emptyIndex] = tiles[index];
-        tiles[index] = EMPTY;
-        emptyIndex = index;
     }
 
     private boolean isAdjacent(int a, int b) {

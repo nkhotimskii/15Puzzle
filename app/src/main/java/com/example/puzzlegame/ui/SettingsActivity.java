@@ -3,11 +3,16 @@ package com.example.puzzlegame.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import com.example.puzzlegame.R;
 import com.example.puzzlegame.data.GameRepository;
 import com.example.puzzlegame.game.Difficulty;
@@ -32,6 +37,13 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        View root = findViewById(R.id.root);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,16 +91,13 @@ public class SettingsActivity extends AppCompatActivity {
         StringBuilder sb = new StringBuilder();
         boolean any = false;
         for (Difficulty d : Difficulty.values()) {
-            long numbers = repository.getBestTime(false, d);
-            long image = repository.getBestTime(true, d);
-            if (numbers > 0 || image > 0) {
+            long best = repository.getBestTime(d);
+            if (best > 0) {
                 any = true;
             }
             sb.append(getString(d.getLabelRes()))
                     .append(": ")
-                    .append(format(numbers))
-                    .append(" / ")
-                    .append(format(image))
+                    .append(format(best))
                     .append('\n');
         }
         bestTimesText.setText(any ? sb.toString().trim() : getString(R.string.best_times_none));

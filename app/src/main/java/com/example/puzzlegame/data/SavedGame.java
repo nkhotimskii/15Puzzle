@@ -7,14 +7,12 @@ import com.example.puzzlegame.game.Difficulty;
  */
 public class SavedGame {
     public Difficulty difficulty;
-    public boolean imageMode;
     public int[] tiles;
     public int moves;
     public long elapsedMs;
 
-    public SavedGame(Difficulty difficulty, boolean imageMode, int[] tiles, int moves, long elapsedMs) {
+    public SavedGame(Difficulty difficulty, int[] tiles, int moves, long elapsedMs) {
         this.difficulty = difficulty;
-        this.imageMode = imageMode;
         this.tiles = tiles;
         this.moves = moves;
         this.elapsedMs = elapsedMs;

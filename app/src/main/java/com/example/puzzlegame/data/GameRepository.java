@@ -26,7 +26,6 @@ public class GameRepository {
 
     private static final String KEY_SAVED = "saved_game_exists";
     private static final String KEY_SAVED_DIFFICULTY = "saved_difficulty";
-    private static final String KEY_SAVED_MODE = "saved_image_mode";
     private static final String KEY_SAVED_TILES = "saved_tiles";
     private static final String KEY_SAVED_MOVES = "saved_moves";
     private static final String KEY_SAVED_ELAPSED = "saved_elapsed_ms";
@@ -66,16 +65,16 @@ public class GameRepository {
 
     // --- Best times ---
 
-    /** Returns the best time in milliseconds for the given mode/difficulty, or 0. */
-    public long getBestTime(boolean imageMode, Difficulty difficulty) {
-        return prefs.getLong(bestTimeKey(imageMode, difficulty), 0L);
+    /** Returns the best time in milliseconds for the given difficulty, or 0. */
+    public long getBestTime(Difficulty difficulty) {
+        return prefs.getLong(bestTimeKey(difficulty), 0L);
     }
 
     /** Records a new best time if it beats (or is the first) recorded best. */
-    public void setBestTime(boolean imageMode, Difficulty difficulty, long millis) {
-        long current = getBestTime(imageMode, difficulty);
+    public void setBestTime(Difficulty difficulty, long millis) {
+        long current = getBestTime(difficulty);
         if (current == 0L || millis < current) {
-            prefs.edit().putLong(bestTimeKey(imageMode, difficulty), millis).apply();
+            prefs.edit().putLong(bestTimeKey(difficulty), millis).apply();
         }
     }
 
@@ -115,10 +114,8 @@ public class GameRepository {
 
     public void resetBestTimes() {
         SharedPreferences.Editor editor = prefs.edit();
-        for (String mode : new String[]{"numbers", "image"}) {
-            for (int size : new int[]{3, 4, 5}) {
-                editor.remove("best_" + mode + "_" + size + "x" + size);
-            }
+        for (int size : new int[]{3, 4, 5}) {
+            editor.remove("best_" + size + "x" + size);
         }
         editor.apply();
     }
@@ -134,7 +131,6 @@ public class GameRepository {
         prefs.edit()
                 .putBoolean(KEY_SAVED, true)
                 .putInt(KEY_SAVED_DIFFICULTY, game.difficulty.getSize())
-                .putBoolean(KEY_SAVED_MODE, game.imageMode)
                 .putString(KEY_SAVED_TILES, sb.toString())
                 .putInt(KEY_SAVED_MOVES, game.moves)
                 .putLong(KEY_SAVED_ELAPSED, game.elapsedMs)
@@ -147,7 +143,6 @@ public class GameRepository {
             return null;
         }
         Difficulty difficulty = Difficulty.fromSize(prefs.getInt(KEY_SAVED_DIFFICULTY, 4));
-        boolean imageMode = prefs.getBoolean(KEY_SAVED_MODE, false);
         int moves = prefs.getInt(KEY_SAVED_MOVES, 0);
         long elapsed = prefs.getLong(KEY_SAVED_ELAPSED, 0L);
 
@@ -174,15 +169,14 @@ public class GameRepository {
         if (!ok) {
             return null;
         }
-        return new SavedGame(difficulty, imageMode, tiles, moves, elapsed);
+        return new SavedGame(difficulty, tiles, moves, elapsed);
     }
 
     public void clearGame() {
         prefs.edit().remove(KEY_SAVED).apply();
     }
 
-    private String bestTimeKey(boolean imageMode, Difficulty difficulty) {
-        String mode = imageMode ? "image" : "numbers";
-        return "best_" + mode + "_" + difficulty.getSize() + "x" + difficulty.getSize();
+    private String bestTimeKey(Difficulty difficulty) {
+        return "best_" + difficulty.getSize() + "x" + difficulty.getSize();
     }
 }

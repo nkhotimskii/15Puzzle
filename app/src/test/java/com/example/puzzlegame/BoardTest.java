@@ -55,44 +55,11 @@ public class BoardTest {
     }
 
     @Test
-    public void undo_reversesLastMove() {
-        Board board = new Board(4);
-        board.move(14);
-        assertFalse(board.isSolved());
-
-        int moved = board.undo();
-        assertEquals(15, moved);
-        assertTrue(board.isSolved());
-        assertEquals(15, board.getEmptyIndex());
-    }
-
-    @Test
-    public void undo_emptyWhenNoMoves() {
-        Board board = new Board(4);
-        assertEquals(-1, board.undo());
-        assertFalse(board.canUndo());
-    }
-
-    @Test
     public void solvingByReversingMoves() {
         Board board = new Board(4);
         assertTrue(board.move(14));
         assertFalse(board.isSolved());
         assertTrue(board.move(15));
-        assertTrue(board.isSolved());
-    }
-
-    @Test
-    public void undoAfterShuffle_keepsBoardSolvable() {
-        Board board = new Board(4);
-        board.shuffle();
-        // Undo everything until empty; must reach the solved state.
-        int steps = 0;
-        while (board.canUndo()) {
-            board.undo();
-            steps++;
-            assertTrue("undo looped forever", steps < 10000);
-        }
         assertTrue(board.isSolved());
     }
 

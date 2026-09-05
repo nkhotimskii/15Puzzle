@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -36,7 +35,6 @@ public class PuzzleView extends View {
     private static final long SLIDE_DURATION_MS = 180L;
 
     private int[] tiles;
-    private Bitmap[] tileImages;
     private int size;
 
     private int[] tileColors;
@@ -104,12 +102,6 @@ public class PuzzleView extends View {
             }
         }
         updateGeometry();
-        invalidate();
-    }
-
-    /** Sets the tile bitmaps for image mode, or null for number mode. */
-    public void setTileImages(Bitmap[] images) {
-        this.tileImages = images;
         invalidate();
     }
 
@@ -197,33 +189,47 @@ public class PuzzleView extends View {
         for (int i = 0; i < tiles.length; i++) {
             int value = tiles[i];
 
-            float x = boardLeft + (i % size) * cellSize;
-            float y = boardTop + (i / size) * cellSize;
-
             if (value == 0) {
-                scratch.set(x + gap, y + gap, x + cellSize - gap, y + cellSize - gap);
-                canvas.drawRoundRect(scratch, corner, corner, emptyPaint);
+                drawEmptyCell(canvas, i, gap, corner);
                 continue;
             }
 
-            if (animating && animValue == value && i == animTo) {
-                float fromX = boardLeft + (animFrom % size) * cellSize;
-                float fromY = boardTop + (animFrom / size) * cellSize;
-                x = fromX + (x - fromX) * animProgress;
-                y = fromY + (y - fromY) * animProgress;
+            // The moving tile is drawn last, on top of everything, so it never
+            // gets hidden behind the empty cell it just vacated.
+            if (animating && value == animValue && i == animTo) {
+                continue;
             }
 
-            scratch.set(x + gap, y + gap, x + cellSize - gap, y + cellSize - gap);
-
-            if (tileImages != null && tileImages[value] != null) {
-                canvas.drawBitmap(tileImages[value], null, scratch, null);
-            } else {
-                tilePaint.setColor(tileColors[value]);
-                canvas.drawRoundRect(scratch, corner, corner, tilePaint);
-                canvas.drawRoundRect(scratch, corner, corner, tileBorderPaint);
-                canvas.drawText(tileLabels[value], scratch.centerX(), scratch.centerY() - fontOffset, textPaint);
-            }
+            float x = boardLeft + (i % size) * cellSize;
+            float y = boardTop + (i / size) * cellSize;
+            drawTile(canvas, value, x, y, gap, corner, fontOffset);
         }
+
+        if (animating && animValue > 0) {
+            float fromX = boardLeft + (animFrom % size) * cellSize;
+            float fromY = boardTop + (animFrom / size) * cellSize;
+            float toX = boardLeft + (animTo % size) * cellSize;
+            float toY = boardTop + (animTo / size) * cellSize;
+            float x = fromX + (toX - fromX) * animProgress;
+            float y = fromY + (toY - fromY) * animProgress;
+            drawTile(canvas, animValue, x, y, gap, corner, fontOffset);
+        }
+    }
+
+    private void drawEmptyCell(Canvas canvas, int index, float gap, float corner) {
+        float x = boardLeft + (index % size) * cellSize;
+        float y = boardTop + (index / size) * cellSize;
+        scratch.set(x + gap, y + gap, x + cellSize - gap, y + cellSize - gap);
+        canvas.drawRoundRect(scratch, corner, corner, emptyPaint);
+    }
+
+    private void drawTile(Canvas canvas, int value, float x, float y,
+                          float gap, float corner, float fontOffset) {
+        scratch.set(x + gap, y + gap, x + cellSize - gap, y + cellSize - gap);
+        tilePaint.setColor(tileColors[value]);
+        canvas.drawRoundRect(scratch, corner, corner, tilePaint);
+        canvas.drawRoundRect(scratch, corner, corner, tileBorderPaint);
+        canvas.drawText(tileLabels[value], scratch.centerX(), scratch.centerY() - fontOffset, textPaint);
     }
 
     private boolean isAnimating() {

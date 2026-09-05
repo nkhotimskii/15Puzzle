@@ -1,9 +1,6 @@
 package com.example.puzzlegame.game;
 
 import android.app.Application;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -17,35 +14,21 @@ import com.example.puzzlegame.data.GameRepository;
 import com.example.puzzlegame.data.SavedGame;
 import com.example.puzzlegame.ui.SingleLiveEvent;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Holds all game state and survives configuration changes. It owns the board,
- * timer, best-time recording, statistics and image splitting, and exposes the
- * results as {@link LiveData} for the UI to observe.
+ * timer, best-time recording and statistics, and exposes the results as
+ * {@link LiveData} for the UI to observe.
  */
 public class GameViewModel extends AndroidViewModel {
 
-    private static final int MAX_IMAGE_EDGE = 1024;
-    private static final String IMAGE_FILE = "puzzle_image.png";
-
     private final GameRepository repository;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
-    private final ExecutorService ioExecutor = Executors.newSingleThreadExecutor();
 
     private Board board;
     private Difficulty difficulty = Difficulty.NORMAL;
-    private boolean imageMode;
     private int moves;
-
-    // Image-mode data.
-    private Bitmap sourceImage;
-    private Bitmap[] tileImages;
 
     // Timer state.
     private long elapsedMs;
@@ -59,10 +42,7 @@ public class GameViewModel extends AndroidViewModel {
     private final MutableLiveData<String> timeLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> bestLiveData = new MutableLiveData<>();
     private final MutableLiveData<Difficulty> difficultyLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> imageModeLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Bitmap[]> tileImagesLiveData = new MutableLiveData<>();
     private final SingleLiveEvent<Integer> solvedEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Integer> imageErrorEvent = new SingleLiveEvent<>();
 
     private final Runnable tick = new Runnable() {
         @Override
@@ -84,7 +64,7 @@ public class GameViewModel extends AndroidViewModel {
         if (saved != null) {
             restoreGame(saved);
         } else {
-            startNewGame(repository.getDifficulty(), false);
+            startNewGame(repository.getDifficulty());
         }
     }
 
@@ -114,20 +94,8 @@ public class GameViewModel extends AndroidViewModel {
         return difficultyLiveData;
     }
 
-    public LiveData<Boolean> getImageMode() {
-        return imageModeLiveData;
-    }
-
-    public LiveData<Bitmap[]> getTileImages() {
-        return tileImagesLiveData;
-    }
-
     public LiveData<Integer> getSolvedEvent() {
         return solvedEvent;
-    }
-
-    public LiveData<Integer> getImageErrorEvent() {
-        return imageErrorEvent;
     }
 
     // --- Settings ---
@@ -162,8 +130,8 @@ public class GameViewModel extends AndroidViewModel {
         return repository.getTotalMoves();
     }
 
-    public long getBestTime(boolean image, Difficulty d) {
-        return repository.getBestTime(image, d);
+    public long getBestTime(Difficulty d) {
+        return repository.getBestTime(d);
     }
 
     public void resetStatistics() {
@@ -180,34 +148,11 @@ public class GameViewModel extends AndroidViewModel {
     // --- Game control ---
 
     public void newGame() {
-        startNewGame(difficulty, imageMode);
+        startNewGame(difficulty);
     }
 
     public void selectDifficulty(@NonNull Difficulty d) {
-        startNewGame(d, imageMode);
-    }
-
-    public void playNumbers() {
-        if (!imageMode) {
-            return;
-        }
-        startNewGame(difficulty, false);
-    }
-
-    public void playImage(Uri uri) {
-        ioExecutor.execute(() -> {
-            Bitmap square = decodeSquareImage(uri);
-            if (square == null) {
-                imageErrorEvent.postValue(0);
-                return;
-            }
-            saveImageFile(square);
-            mainHandler.post(() -> {
-                recycle(sourceImage);
-                sourceImage = square;
-                startNewGame(difficulty, true);
-            });
-        });
+        startNewGame(d);
     }
 
     public void moveTile(int index) {
@@ -263,16 +208,13 @@ public class GameViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         mainHandler.removeCallbacks(tick);
-        ioExecutor.shutdownNow();
-        recycle(sourceImage);
         super.onCleared();
     }
 
     // --- Internals ---
 
-    private void startNewGame(Difficulty d, boolean image) {
+    private void startNewGame(Difficulty d) {
         difficulty = d;
-        imageMode = image;
         repository.setDifficulty(d);
 
         board = new Board(d.getSize());
@@ -283,12 +225,6 @@ public class GameViewModel extends AndroidViewModel {
         solvedHandled = false;
         mainHandler.removeCallbacks(tick);
 
-        if (image && sourceImage != null) {
-            tileImages = splitImage(sourceImage);
-        } else {
-            tileImages = null;
-        }
-
         repository.incrementGamesPlayed();
         repository.clearGame();
         emitAll();
@@ -296,7 +232,6 @@ public class GameViewModel extends AndroidViewModel {
 
     private void restoreGame(SavedGame saved) {
         difficulty = saved.difficulty;
-        imageMode = saved.imageMode;
         moves = saved.moves;
         elapsedMs = saved.elapsedMs;
         running = false;
@@ -304,20 +239,6 @@ public class GameViewModel extends AndroidViewModel {
 
         board = new Board(difficulty.getSize());
         board.setTiles(saved.tiles);
-
-        if (imageMode) {
-            sourceImage = loadImageFile();
-            if (sourceImage != null) {
-                tileImages = splitImage(sourceImage);
-            } else {
-                imageMode = false;
-                board.reset();
-                moves = 0;
-                elapsedMs = 0;
-            }
-        } else {
-            tileImages = null;
-        }
 
         emitAll();
     }
@@ -343,7 +264,7 @@ public class GameViewModel extends AndroidViewModel {
         if (board.isSolved() && !solvedHandled) {
             solvedHandled = true;
             pauseTimer();
-            repository.setBestTime(imageMode, difficulty, elapsedMs);
+            repository.setBestTime(difficulty, elapsedMs);
             repository.incrementGamesWon();
             repository.addToTotalMoves(moves);
             repository.clearGame();
@@ -357,12 +278,10 @@ public class GameViewModel extends AndroidViewModel {
         timeLiveData.setValue(formatElapsed(elapsedMs));
         bestLiveData.setValue(bestTimeText());
         difficultyLiveData.setValue(difficulty);
-        imageModeLiveData.setValue(imageMode);
-        tileImagesLiveData.setValue(tileImages);
     }
 
     private String bestTimeText() {
-        long best = repository.getBestTime(imageMode, difficulty);
+        long best = repository.getBestTime(difficulty);
         return best == 0L ? "--:--" : formatElapsed(best);
     }
 
@@ -391,8 +310,7 @@ public class GameViewModel extends AndroidViewModel {
             repository.clearGame();
             return;
         }
-        repository.saveGame(new SavedGame(
-                difficulty, imageMode, board.toArray(), moves, elapsedMs));
+        repository.saveGame(new SavedGame(difficulty, board.toArray(), moves, elapsedMs));
     }
 
     private static String formatElapsed(long ms) {
@@ -404,99 +322,5 @@ public class GameViewModel extends AndroidViewModel {
             return String.format(Locale.US, "%d:%02d:%02d", hours, minutes, seconds);
         }
         return String.format(Locale.US, "%d:%02d", minutes, seconds);
-    }
-
-    // --- Image helpers ---
-
-    private Bitmap decodeSquareImage(Uri uri) {
-        try {
-            BitmapFactory.Options bounds = new BitmapFactory.Options();
-            bounds.inJustDecodeBounds = true;
-            try (InputStream in = getApplication().getContentResolver().openInputStream(uri)) {
-                BitmapFactory.decodeStream(in, null, bounds);
-            }
-            if (bounds.outWidth <= 0 || bounds.outHeight <= 0) {
-                return null;
-            }
-
-            int sampleSize = 1;
-            while (bounds.outWidth / sampleSize > MAX_IMAGE_EDGE * 2
-                    || bounds.outHeight / sampleSize > MAX_IMAGE_EDGE * 2) {
-                sampleSize *= 2;
-            }
-
-            BitmapFactory.Options opts = new BitmapFactory.Options();
-            opts.inSampleSize = sampleSize;
-            Bitmap decoded;
-            try (InputStream in = getApplication().getContentResolver().openInputStream(uri)) {
-                decoded = BitmapFactory.decodeStream(in, null, opts);
-            }
-            if (decoded == null) {
-                return null;
-            }
-            return centerCropSquare(decoded);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private static Bitmap centerCropSquare(Bitmap source) {
-        int side = Math.min(source.getWidth(), source.getHeight());
-        int x = (source.getWidth() - side) / 2;
-        int y = (source.getHeight() - side) / 2;
-        Bitmap square = Bitmap.createBitmap(source, x, y, side, side);
-        if (square != source) {
-            source.recycle();
-        }
-        return square;
-    }
-
-    private Bitmap[] splitImage(Bitmap square) {
-        int size = difficulty.getSize();
-        int cellCount = difficulty.getCellCount();
-        int cellPx = square.getWidth() / size;
-        Bitmap[] result = new Bitmap[cellCount];
-        for (int v = 1; v < cellCount; v++) {
-            int row = (v - 1) / size;
-            int col = (v - 1) % size;
-            result[v] = Bitmap.createBitmap(square, col * cellPx, row * cellPx, cellPx, cellPx);
-        }
-        return result;
-    }
-
-    private void saveImageFile(Bitmap square) {
-        File file = new File(getApplication().getFilesDir(), IMAGE_FILE);
-        try (FileOutputStream out = new FileOutputStream(file)) {
-            square.compress(Bitmap.CompressFormat.PNG, 100, out);
-        } catch (Exception ignored) {
-            // Best effort; the game still works without persistence.
-        }
-    }
-
-    private Bitmap loadImageFile() {
-        File file = new File(getApplication().getFilesDir(), IMAGE_FILE);
-        if (!file.exists()) {
-            return null;
-        }
-        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-        if (bitmap == null) {
-            return null;
-        }
-        int maxEdge = Math.max(bitmap.getWidth(), bitmap.getHeight());
-        if (maxEdge > MAX_IMAGE_EDGE) {
-            float scale = (float) MAX_IMAGE_EDGE / maxEdge;
-            Bitmap scaled = Bitmap.createScaledBitmap(bitmap,
-                    Math.round(bitmap.getWidth() * scale),
-                    Math.round(bitmap.getHeight() * scale), true);
-            bitmap.recycle();
-            bitmap = scaled;
-        }
-        return centerCropSquare(bitmap);
-    }
-
-    private static void recycle(Bitmap bitmap) {
-        if (bitmap != null && !bitmap.isRecycled()) {
-            bitmap.recycle();
-        }
     }
 }
