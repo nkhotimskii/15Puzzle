@@ -1,0 +1,7 @@
+# App-specific R8/ProGuard keep rules for PuzzleGame.
+# The default AGP keep rules already cover Android framework and androidx.
+# Add rules here only if reflection-based features require them.
+
+# Keep the application entry points.
+-keep class com.example.puzzlegame.MainActivity { *; }
+-keep class com.example.puzzlegame.SettingsActivity { *; }

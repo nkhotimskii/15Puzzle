@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">PuzzleGame</string>
+
+    <string name="moves">Moves: %1$d</string>
+    <string name="time">Time: %1$s</string>
+    <string name="best">Best: %1$s</string>
+    <string name="new_game">New Game</string>
+    <string name="keep_playing">Keep playing</string>
+
+    <string name="solved_title">Puzzle solved!</string>
+    <string name="solved_message">You solved the puzzle in %1$d moves in %2$s.</string>
+
+    <string name="menu_difficulty">Difficulty</string>
+    <string name="menu_mode">Mode</string>
+    <string name="menu_numbers">Numbers</string>
+    <string name="menu_image">Image</string>
+    <string name="menu_settings">Settings</string>
+
+    <string name="difficulty_easy">3×3 (Easy)</string>
+    <string name="difficulty_normal">4×4 (Normal)</string>
+    <string name="difficulty_hard">5×5 (Hard)</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="sound">Sound effects</string>
+    <string name="haptics">Haptic feedback</string>
+    <string name="statistics">Statistics</string>
+    <string name="games_played">Games played: %1$d</string>
+    <string name="games_won">Games won: %1$d</string>
+    <string name="total_moves">Total moves: %1$d</string>
+    <string name="best_times">Best times</string>
+    <string name="best_times_none">No records yet</string>
+    <string name="reset_stats">Reset statistics</string>
+    <string name="reset_stats_confirm">Reset all statistics and best times?</string>
+
+    <string name="image_error_title">Couldn\'t load image</string>
+    <string name="image_error_message">That image couldn\'t be opened. Please try another one.</string>
+</resources>
