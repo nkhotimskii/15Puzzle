@@ -5,10 +5,10 @@
     <string name="time">Time: %1$s</string>
     <string name="best">Best: %1$s</string>
     <string name="new_game">New Game</string>
-    <string name="keep_playing">Keep playing</string>
 
     <string name="solved_title">Puzzle solved!</string>
     <string name="solved_message">You solved the puzzle in %1$d moves in %2$s.</string>
+    <string name="ok">OK</string>
 
     <string name="menu_difficulty">Difficulty</string>
     <string name="menu_settings">Settings</string>

@@ -119,8 +119,7 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
         new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.solved_title)
                 .setMessage(getString(R.string.solved_message, moves, currentTime))
-                .setPositiveButton(R.string.new_game, (dialog, which) -> viewModel.newGame())
-                .setNegativeButton(R.string.keep_playing, (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
