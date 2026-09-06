@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">15 Puzzle</string>
 
-    <string name="moves">Ходы: %1$d</string>
-    <string name="time">Время: %1$s</string>
-    <string name="best">Рекорд: %1$s</string>
+    <string name="moves">ХОДЫ: %1$d</string>
+    <string name="time">ВРЕМЯ: %1$s</string>
+    <string name="best">РЕКОРД: %1$s</string>
     <string name="new_game">Новая игра</string>
 
     <string name="solved_title">Головоломка решена!</string>

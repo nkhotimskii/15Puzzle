@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base palette -->
-    <color name="background">#12122A</color>
-    <color name="surface">#1B1B38</color>
+    <color name="background">#0E1018</color>
+    <color name="surface">#161A26</color>
 
     <!-- Brand / accent -->
-    <color name="primary">#7C7CF0</color>
-    <color name="on_primary">#FFFFFF</color>
+    <color name="primary">#22D3EE</color>
+    <color name="on_primary">#071318</color>
 
     <!-- Text -->
-    <color name="text_primary">#ECECF7</color>
-    <color name="text_secondary">#9A9AC2</color>
+    <color name="text_primary">#E4E7F0</color>
+    <color name="text_secondary">#8A90A0</color>
+    <color name="title_text">#7EE6F0</color>
 
     <!-- Board -->
-    <color name="board_background">#17172E</color>
-    <color name="tile_empty">#23233F</color>
-    <color name="tile_border">#33FFFFFF</color>
+    <color name="board_background">#13151F</color>
+    <color name="tile_empty">#1B1E2B</color>
+    <color name="tile_border">#4D22D3EE</color>
+    <color name="tile_text">#14161F</color>
+    <color name="grid_line">#1822D3EE</color>
+    <color name="empty_border">#2622D3EE</color>
+    <color name="accent_divider">#4022D3EE</color>
 </resources>

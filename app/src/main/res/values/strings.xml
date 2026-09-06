@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">15 Puzzle</string>
 
-    <string name="moves">Moves: %1$d</string>
-    <string name="time">Time: %1$s</string>
-    <string name="best">Best: %1$s</string>
+    <string name="moves">MOVES: %1$d</string>
+    <string name="time">TIME: %1$s</string>
+    <string name="best">BEST: %1$s</string>
     <string name="new_game">New Game</string>
 
     <string name="solved_title">Puzzle solved!</string>

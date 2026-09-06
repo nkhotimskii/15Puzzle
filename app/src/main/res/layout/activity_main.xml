@@ -12,7 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?android:colorBackground"
         app:title="@string/app_name"
-        app:titleTextColor="@color/text_primary" />
+        app:titleTextColor="@color/title_text" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,8 +21,8 @@
         android:orientation="horizontal"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
 
         <TextView
             android:id="@+id/moves_text"
@@ -31,8 +31,12 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/moves"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:shadowColor="#8022D3EE"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="8" />
 
         <TextView
             android:id="@+id/time_text"
@@ -41,8 +45,12 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/time"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:shadowColor="#8022D3EE"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="8" />
 
         <TextView
             android:id="@+id/best_text"
@@ -51,9 +59,18 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/best"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:shadowColor="#8022D3EE"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="8" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/accent_divider" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -23,7 +23,7 @@ Slide the numbered tiles into the empty slot to arrange them in order from 1 to 
 - UI: **Material 3** (`Theme.Material3.Dark`) + custom `PuzzleView` (Canvas rendering)
 - Architecture: **MVVM** — `AndroidViewModel` + `LiveData`
 - Persistence: `SharedPreferences` via a `GameRepository`
-- Font: [Poppins](https://fonts.google.com/specimen/Poppins) (SIL Open Font License)
+- Font: [JetBrains Mono](https://www.jetbrains.com/lp/mono/) (SIL Open Font License)
 
 ## Requirements
 
@@ -94,6 +94,6 @@ APK and runs the unit tests on every push and pull request.
 
 ## License
 
-The app source is provided as-is. The bundled **Poppins** font is licensed
-under the [SIL Open Font License, Version 1.1](licenses/Poppins-OFL.txt), which
+The app source is provided as-is. The bundled **JetBrains Mono** font is licensed
+under the [SIL Open Font License, Version 1.1](licenses/JetBrainsMono-OFL.txt), which
 permits free commercial use.
