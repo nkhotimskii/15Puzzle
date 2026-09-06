@@ -37,7 +37,8 @@ public class PuzzleView extends View {
     private static final float GAP_FACTOR = 0.05f;
     private static final float CORNER_FACTOR = 0.08f;
     private static final long SLIDE_DURATION_MS = 120L;
-    private static final float SPIN_DEGREES = 360f;
+    private static final int TRAIL_COUNT = 3;
+    private static final float TRAIL_STEP = 0.10f;
 
     private int[] tiles;
     private int size;
@@ -45,6 +46,7 @@ public class PuzzleView extends View {
     private int[] tileColors;
     private String[] tileLabels;
     private Typeface numberTypeface;
+    private int borderColor;
 
     private float cellSize;
     private float boardLeft;
@@ -87,7 +89,8 @@ public class PuzzleView extends View {
 
         tileBorderPaint.setStyle(Paint.Style.STROKE);
         tileBorderPaint.setStrokeWidth(2f);
-        tileBorderPaint.setColor(context.getColor(R.color.tile_border));
+        borderColor = context.getColor(R.color.tile_border);
+        tileBorderPaint.setColor(borderColor);
 
         emptyBorderPaint.setStyle(Paint.Style.STROKE);
         emptyBorderPaint.setStrokeWidth(1f);
@@ -234,7 +237,7 @@ public class PuzzleView extends View {
 
             float x = boardLeft + (i % size) * cellSize;
             float y = boardTop + (i / size) * cellSize;
-            drawTile(canvas, value, x, y, gap, corner, fontOffset, 0f, 1f);
+            drawTile(canvas, value, x, y, gap, corner, fontOffset, 255);
         }
 
         if (animating && animValue > 0) {
@@ -242,11 +245,22 @@ public class PuzzleView extends View {
             float fromY = boardTop + (animFrom / size) * cellSize;
             float toX = boardLeft + (animTo % size) * cellSize;
             float toY = boardTop + (animTo / size) * cellSize;
+
+            // Fading trail behind the moving tile.
+            for (int k = TRAIL_COUNT; k >= 1; k--) {
+                float tp = animProgress - k * TRAIL_STEP;
+                if (tp < 0f) {
+                    continue;
+                }
+                int alpha = (int) (255f * (1f - k / (float) (TRAIL_COUNT + 1)));
+                float tx = fromX + (toX - fromX) * tp;
+                float ty = fromY + (toY - fromY) * tp;
+                drawTile(canvas, animValue, tx, ty, gap, corner, fontOffset, alpha);
+            }
+
             float x = fromX + (toX - fromX) * animProgress;
             float y = fromY + (toY - fromY) * animProgress;
-            float rotation = animProgress * SPIN_DEGREES;
-            float scale = 1f + 0.08f * (float) Math.sin(Math.PI * animProgress);
-            drawTile(canvas, animValue, x, y, gap, corner, fontOffset, rotation, scale);
+            drawTile(canvas, animValue, x, y, gap, corner, fontOffset, 255);
         }
     }
 
@@ -269,32 +283,27 @@ public class PuzzleView extends View {
     }
 
     private void drawTile(Canvas canvas, int value, float x, float y,
-                          float gap, float corner, float fontOffset,
-                          float rotation, float scale) {
+                          float gap, float corner, float fontOffset, int alpha) {
         scratch.set(x + gap, y + gap, x + cellSize - gap, y + cellSize - gap);
 
-        int saveCount = canvas.save();
-        if (rotation != 0f || scale != 1f) {
-            float cx = x + cellSize / 2f;
-            float cy = y + cellSize / 2f;
-            canvas.translate(cx, cy);
-            canvas.rotate(rotation);
-            canvas.scale(scale, scale);
-            canvas.translate(-cx, -cy);
-        }
-
-        // Neon glow in the tile's own color for a subtle cyberpunk feel.
+        float af = alpha / 255f;
         int base = tileColors[value];
-        int glow = Color.argb(0x66, Color.red(base), Color.green(base), Color.blue(base));
+        int fill = Color.argb(alpha, Color.red(base), Color.green(base), Color.blue(base));
+        int glow = Color.argb((int) (0x66 * af), Color.red(base), Color.green(base), Color.blue(base));
+        int border = Color.argb((int) (Color.alpha(borderColor) * af),
+                Color.red(borderColor), Color.green(borderColor), Color.blue(borderColor));
+
         tilePaint.setShadowLayer(cellSize * 0.12f, 0f, 0f, glow);
-        tilePaint.setColor(base);
+        tilePaint.setColor(fill);
         canvas.drawRoundRect(scratch, corner, corner, tilePaint);
         tilePaint.clearShadowLayer();
 
+        tileBorderPaint.setColor(border);
         canvas.drawRoundRect(scratch, corner, corner, tileBorderPaint);
-        canvas.drawText(tileLabels[value], scratch.centerX(), scratch.centerY() - fontOffset, textPaint);
 
-        canvas.restoreToCount(saveCount);
+        textPaint.setAlpha(alpha);
+        canvas.drawText(tileLabels[value], scratch.centerX(), scratch.centerY() - fontOffset, textPaint);
+        textPaint.setAlpha(255);
     }
 
     private boolean isAnimating() {
