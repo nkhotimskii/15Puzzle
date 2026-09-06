@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Base palette -->
+    <color name="background">#12122A</color>
+    <color name="surface">#1B1B38</color>
+
+    <!-- Brand / accent -->
+    <color name="primary">#7C7CF0</color>
+    <color name="on_primary">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#ECECF7</color>
+    <color name="text_secondary">#9A9AC2</color>
+
+    <!-- Board -->
+    <color name="board_background">#17172E</color>
+    <color name="tile_empty">#23233F</color>
+    <color name="tile_border">#33FFFFFF</color>
 </resources>

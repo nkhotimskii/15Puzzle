@@ -8,11 +8,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
+import androidx.core.content.res.ResourcesCompat;
+
+import com.example.puzzlegame.R;
 import com.example.puzzlegame.game.Direction;
 import com.example.puzzlegame.game.Move;
 
@@ -29,9 +33,9 @@ public class PuzzleView extends View {
         void onSwipe(Direction direction);
     }
 
-    private static final float PADDING_FACTOR = 0.04f;
-    private static final float GAP_FACTOR = 0.045f;
-    private static final float CORNER_FACTOR = 0.06f;
+    private static final float PADDING_FACTOR = 0.03f;
+    private static final float GAP_FACTOR = 0.05f;
+    private static final float CORNER_FACTOR = 0.08f;
     private static final long SLIDE_DURATION_MS = 180L;
 
     private int[] tiles;
@@ -39,6 +43,7 @@ public class PuzzleView extends View {
 
     private int[] tileColors;
     private String[] tileLabels;
+    private Typeface numberTypeface;
 
     private float cellSize;
     private float boardLeft;
@@ -73,17 +78,20 @@ public class PuzzleView extends View {
     }
 
     private void init() {
-        backgroundPaint.setColor(Color.parseColor("#1B1B2F"));
-        emptyPaint.setColor(Color.parseColor("#252540"));
+        Context context = getContext();
+        backgroundPaint.setColor(context.getColor(R.color.board_background));
+        emptyPaint.setColor(context.getColor(R.color.tile_empty));
 
         tileBorderPaint.setStyle(Paint.Style.STROKE);
         tileBorderPaint.setStrokeWidth(2f);
-        tileBorderPaint.setColor(Color.parseColor("#33FFFFFF"));
+        tileBorderPaint.setColor(context.getColor(R.color.tile_border));
+
+        numberTypeface = ResourcesCompat.getFont(context, R.font.poppins_bold);
 
         textPaint.setColor(Color.WHITE);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setAntiAlias(true);
-        textPaint.setFakeBoldText(true);
+        textPaint.setTypeface(numberTypeface);
 
         setFocusable(true);
     }
@@ -176,8 +184,8 @@ public class PuzzleView extends View {
         tileColors = new int[cellCount];
         tileLabels = new String[cellCount];
         for (int v = 1; v < cellCount; v++) {
-            float hue = 190f + (v - 1) * (360f - 190f) / (cellCount - 1);
-            tileColors[v] = Color.HSVToColor(new float[]{hue, 0.55f, 0.92f});
+            float hue = 205f + (v - 1) * (275f - 205f) / (cellCount - 1);
+            tileColors[v] = Color.HSVToColor(new float[]{hue, 0.48f, 0.95f});
             tileLabels[v] = String.valueOf(v);
         }
     }
@@ -195,6 +203,9 @@ public class PuzzleView extends View {
         float textSize = cellSize * 0.42f;
         textPaint.setTextSize(textSize);
         float fontOffset = (textPaint.descent() + textPaint.ascent()) / 2f;
+
+        // Soft drop shadow under the tiles for a bit of depth.
+        tilePaint.setShadowLayer(cellSize * 0.05f, 0f, cellSize * 0.025f, 0x66000000);
 
         boolean animating = isAnimating();
 
