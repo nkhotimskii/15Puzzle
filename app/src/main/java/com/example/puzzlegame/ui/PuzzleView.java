@@ -184,8 +184,8 @@ public class PuzzleView extends View {
         tileColors = new int[cellCount];
         tileLabels = new String[cellCount];
         for (int v = 1; v < cellCount; v++) {
-            float hue = 205f + (v - 1) * (275f - 205f) / (cellCount - 1);
-            tileColors[v] = Color.HSVToColor(new float[]{hue, 0.48f, 0.95f});
+            float hue = 185f + (v - 1) * (300f - 185f) / (cellCount - 1);
+            tileColors[v] = Color.HSVToColor(new float[]{hue, 0.70f, 0.92f});
             tileLabels[v] = String.valueOf(v);
         }
     }
