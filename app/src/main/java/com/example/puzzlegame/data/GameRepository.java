@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.Nullable;
 
 import com.example.puzzlegame.game.Difficulty;
+import com.example.puzzlegame.game.TileTheme;
 
 /**
  * Persists settings, statistics, best times and the in-progress game using
@@ -17,6 +18,7 @@ public class GameRepository {
     private static final String PREFS_NAME = "puzzle_prefs";
 
     private static final String KEY_DIFFICULTY = "difficulty";
+    private static final String KEY_THEME = "tile_theme";
     private static final String KEY_SOUND = "sound_enabled";
     private static final String KEY_HAPTICS = "haptics_enabled";
 
@@ -45,6 +47,19 @@ public class GameRepository {
 
     public void setDifficulty(Difficulty difficulty) {
         prefs.edit().putInt(KEY_DIFFICULTY, difficulty.getSize()).apply();
+    }
+
+    public TileTheme getTileTheme() {
+        String name = prefs.getString(KEY_THEME, TileTheme.YELLOW_GREEN.name());
+        try {
+            return TileTheme.valueOf(name);
+        } catch (IllegalArgumentException e) {
+            return TileTheme.YELLOW_GREEN;
+        }
+    }
+
+    public void setTileTheme(TileTheme theme) {
+        prefs.edit().putString(KEY_THEME, theme.name()).apply();
     }
 
     public boolean isSoundEnabled() {

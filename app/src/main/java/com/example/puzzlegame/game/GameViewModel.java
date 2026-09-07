@@ -35,6 +35,7 @@ public class GameViewModel extends AndroidViewModel {
     private long startedAt;
     private boolean running;
     private boolean solvedHandled;
+    private boolean playedCounted;
 
     private final MutableLiveData<int[]> boardState = new MutableLiveData<>();
     private final MutableLiveData<Move> moveEvent = new MutableLiveData<>();
@@ -42,6 +43,7 @@ public class GameViewModel extends AndroidViewModel {
     private final MutableLiveData<String> timeLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> bestLiveData = new MutableLiveData<>();
     private final MutableLiveData<Difficulty> difficultyLiveData = new MutableLiveData<>();
+    private final MutableLiveData<TileTheme> themeLiveData = new MutableLiveData<>();
     private final SingleLiveEvent<Integer> solvedEvent = new SingleLiveEvent<>();
 
     private final Runnable tick = new Runnable() {
@@ -59,6 +61,7 @@ public class GameViewModel extends AndroidViewModel {
     public GameViewModel(@NonNull Application application) {
         super(application);
         repository = new GameRepository(application);
+        themeLiveData.setValue(repository.getTileTheme());
 
         SavedGame saved = repository.loadGame();
         if (saved != null) {
@@ -92,6 +95,15 @@ public class GameViewModel extends AndroidViewModel {
 
     public LiveData<Difficulty> getDifficulty() {
         return difficultyLiveData;
+    }
+
+    public LiveData<TileTheme> getTileTheme() {
+        return themeLiveData;
+    }
+
+    public void setTileTheme(@NonNull TileTheme theme) {
+        repository.setTileTheme(theme);
+        themeLiveData.setValue(theme);
     }
 
     public LiveData<Integer> getSolvedEvent() {
@@ -148,10 +160,12 @@ public class GameViewModel extends AndroidViewModel {
     // --- Game control ---
 
     public void newGame() {
+        markPlayed();
         startNewGame(difficulty);
     }
 
     public void selectDifficulty(@NonNull Difficulty d) {
+        markPlayed();
         startNewGame(d);
     }
 
@@ -223,9 +237,9 @@ public class GameViewModel extends AndroidViewModel {
         elapsedMs = 0;
         running = false;
         solvedHandled = false;
+        playedCounted = false;
         mainHandler.removeCallbacks(tick);
 
-        repository.incrementGamesPlayed();
         repository.clearGame();
         emitAll();
     }
@@ -236,6 +250,7 @@ public class GameViewModel extends AndroidViewModel {
         elapsedMs = saved.elapsedMs;
         running = false;
         solvedHandled = false;
+        playedCounted = false;
 
         board = new Board(difficulty.getSize());
         board.setTiles(saved.tiles);
@@ -264,11 +279,20 @@ public class GameViewModel extends AndroidViewModel {
         if (board.isSolved() && !solvedHandled) {
             solvedHandled = true;
             pauseTimer();
+            markPlayed();
             repository.setBestTime(difficulty, elapsedMs);
             repository.incrementGamesWon();
             repository.addToTotalMoves(moves);
             repository.clearGame();
             solvedEvent.setValue(moves);
+        }
+    }
+
+    /** Counts the current game as played exactly once. */
+    private void markPlayed() {
+        if (!playedCounted) {
+            playedCounted = true;
+            repository.incrementGamesPlayed();
         }
     }
 

@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme (always dark). -->
     <style name="Base.Theme.PuzzleGame" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:fontFamily">@font/jetbrains_mono</item>
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimary">@color/accent_green</item>
+        <item name="colorOnPrimary">@color/on_accent</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/text_primary</item>
@@ -14,4 +14,20 @@
     </style>
 
     <style name="Theme.PuzzleGame" parent="Base.Theme.PuzzleGame" />
+
+    <!-- Per-theme variants: only the accent (colorPrimary) changes. -->
+    <style name="Theme.PuzzleGame.YellowGreen" parent="Theme.PuzzleGame">
+        <item name="colorPrimary">@color/accent_green</item>
+        <item name="colorOnPrimary">@color/on_accent</item>
+    </style>
+
+    <style name="Theme.PuzzleGame.OrangeRed" parent="Theme.PuzzleGame">
+        <item name="colorPrimary">@color/accent_orange</item>
+        <item name="colorOnPrimary">@color/on_accent</item>
+    </style>
+
+    <style name="Theme.PuzzleGame.RosePurple" parent="Theme.PuzzleGame">
+        <item name="colorPrimary">@color/accent_violet</item>
+        <item name="colorOnPrimary">@color/on_accent</item>
+    </style>
 </resources>

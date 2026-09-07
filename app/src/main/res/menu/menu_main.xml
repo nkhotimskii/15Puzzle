@@ -23,6 +23,26 @@
     </item>
 
     <item
+        android:id="@+id/menu_theme"
+        android:title="@string/menu_theme">
+        <menu>
+            <group
+                android:id="@+id/group_theme"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/theme_yellow_green"
+                    android:title="@string/theme_yellow_green" />
+                <item
+                    android:id="@+id/theme_orange_red"
+                    android:title="@string/theme_orange_red" />
+                <item
+                    android:id="@+id/theme_rose_purple"
+                    android:title="@string/theme_rose_purple" />
+            </group>
+        </menu>
+    </item>
+
+    <item
         android:id="@+id/menu_settings"
         android:title="@string/menu_settings"
         app:showAsAction="never" />

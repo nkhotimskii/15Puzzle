@@ -12,7 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?android:colorBackground"
         app:title="@string/settings_title"
-        app:titleTextColor="@color/title_text" />
+        app:titleTextColor="@color/text_primary" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -78,7 +78,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:fontFamily="monospace"
                 android:textSize="15sp" />
 
             <Button

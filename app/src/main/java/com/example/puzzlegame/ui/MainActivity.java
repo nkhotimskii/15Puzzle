@@ -1,5 +1,7 @@
 package com.example.puzzlegame.ui;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
@@ -23,19 +25,27 @@ import com.example.puzzlegame.game.Difficulty;
 import com.example.puzzlegame.game.GameViewModel;
 import com.example.puzzlegame.game.Move;
 import com.example.puzzlegame.game.SoundManager;
+import com.example.puzzlegame.game.TileTheme;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class MainActivity extends AppCompatActivity implements PuzzleView.Listener {
 
+    private static final long WIN_DIALOG_DELAY_MS = 600L;
+
     private GameViewModel viewModel;
     private PuzzleView puzzleView;
     private SoundManager soundManager;
+
+    private Toolbar toolbar;
+    private Button newGameButton;
+    private View divider;
 
     private TextView movesText;
     private TextView timeText;
     private TextView bestText;
 
     private String currentTime = "0:00";
+    private int currentAccent = TileTheme.YELLOW_GREEN.getAccentColor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +55,15 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
         View root = findViewById(R.id.root);
         applyWindowInsets(root);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         puzzleView = findViewById(R.id.puzzle_view);
         movesText = findViewById(R.id.moves_text);
         timeText = findViewById(R.id.time_text);
         bestText = findViewById(R.id.best_text);
-        Button newGameButton = findViewById(R.id.new_game_button);
+        newGameButton = findViewById(R.id.new_game_button);
+        divider = findViewById(R.id.accent_divider);
 
         viewModel = new ViewModelProvider(this).get(GameViewModel.class);
         soundManager = new SoundManager(this);
@@ -95,12 +106,37 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
 
         viewModel.getDifficulty().observe(this, difficulty -> invalidateOptionsMenu());
 
+        viewModel.getTileTheme().observe(this, theme -> {
+            if (theme == null) {
+                return;
+            }
+            puzzleView.setTileTheme(theme);
+            puzzleView.setAccentColor(theme.getAccentColor());
+            applyChromeAccent(theme.getAccentColor());
+        });
+
         viewModel.getMoveEvent().observe(this, move -> {
             puzzleView.animateMove(move);
             onMoveFeedback(move);
         });
 
         viewModel.getSolvedEvent().observe(this, this::showSolvedDialog);
+    }
+
+    private void applyChromeAccent(int accent) {
+        currentAccent = accent;
+        toolbar.setTitleTextColor(accent);
+
+        newGameButton.setBackgroundTintList(ColorStateList.valueOf(accent));
+        newGameButton.setTextColor(getColor(R.color.on_accent));
+
+        divider.setBackgroundColor(Color.argb(0x40,
+                Color.red(accent), Color.green(accent), Color.blue(accent)));
+
+        int glow = Color.argb(0x80, Color.red(accent), Color.green(accent), Color.blue(accent));
+        movesText.setShadowLayer(8f, 0f, 0f, glow);
+        timeText.setShadowLayer(8f, 0f, 0f, glow);
+        bestText.setShadowLayer(8f, 0f, 0f, glow);
     }
 
     private void onMoveFeedback(Move move) {
@@ -116,11 +152,19 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
         }
         soundManager.playSuccess();
 
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.solved_title)
-                .setMessage(getString(R.string.solved_message, moves, currentTime))
-                .setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss())
-                .show();
+        puzzleView.playWinEffect();
+
+        puzzleView.postDelayed(() -> {
+            if (isFinishing() || isDestroyed()) {
+                return;
+            }
+            androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.solved_title)
+                    .setMessage(getString(R.string.solved_message, moves, currentTime))
+                    .setPositiveButton(R.string.ok, (d, which) -> d.dismiss())
+                    .show();
+            dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE).setTextColor(currentAccent);
+        }, WIN_DIALOG_DELAY_MS);
     }
 
     @Override
@@ -149,6 +193,15 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
         } else {
             menu.findItem(R.id.menu_normal).setChecked(true);
         }
+
+        TileTheme theme = viewModel.getTileTheme().getValue();
+        if (theme == TileTheme.ORANGE_RED) {
+            menu.findItem(R.id.theme_orange_red).setChecked(true);
+        } else if (theme == TileTheme.ROSE_PURPLE) {
+            menu.findItem(R.id.theme_rose_purple).setChecked(true);
+        } else {
+            menu.findItem(R.id.theme_yellow_green).setChecked(true);
+        }
         return true;
     }
 
@@ -163,6 +216,15 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
             return true;
         } else if (id == R.id.menu_hard) {
             viewModel.selectDifficulty(Difficulty.HARD);
+            return true;
+        } else if (id == R.id.theme_yellow_green) {
+            viewModel.setTileTheme(TileTheme.YELLOW_GREEN);
+            return true;
+        } else if (id == R.id.theme_orange_red) {
+            viewModel.setTileTheme(TileTheme.ORANGE_RED);
+            return true;
+        } else if (id == R.id.theme_rose_purple) {
+            viewModel.setTileTheme(TileTheme.ROSE_PURPLE);
             return true;
         } else if (id == R.id.menu_settings) {
             startActivity(SettingsActivity.newIntent(this));

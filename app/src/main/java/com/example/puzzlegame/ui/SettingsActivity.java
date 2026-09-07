@@ -35,6 +35,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        repository = new GameRepository(this);
+        setTheme(repository.getTileTheme().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
@@ -51,8 +53,6 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(R.string.settings_title);
         }
-
-        repository = new GameRepository(this);
 
         SwitchMaterial soundSwitch = findViewById(R.id.sound_switch);
         SwitchMaterial hapticsSwitch = findViewById(R.id.haptics_switch);

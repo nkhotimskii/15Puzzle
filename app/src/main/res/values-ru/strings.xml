@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">15 Puzzle</string>
+    <string name="board_description">Игровое поле 15 Puzzle</string>
 
     <string name="moves">ХОДЫ: %1$d</string>
     <string name="time">ВРЕМЯ: %1$s</string>
@@ -11,11 +12,16 @@
     <string name="ok">ОК</string>
 
     <string name="menu_difficulty">Сложность</string>
+    <string name="menu_theme">Тема</string>
     <string name="menu_settings">Настройки</string>
 
     <string name="difficulty_easy">3×3 (Легко)</string>
     <string name="difficulty_normal">4×4 (Обычно)</string>
     <string name="difficulty_hard">5×5 (Сложно)</string>
+
+    <string name="theme_yellow_green">Жёлто-зелёная</string>
+    <string name="theme_orange_red">Оранжево-красная</string>
+    <string name="theme_rose_purple">Розово-фиолетовая</string>
 
     <string name="settings_title">Настройки</string>
     <string name="sound">Звуковые эффекты</string>

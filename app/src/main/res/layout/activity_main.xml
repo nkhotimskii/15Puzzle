@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?android:colorBackground"
-        app:title="@string/app_name"
-        app:titleTextColor="@color/title_text" />
+        app:title="@string/app_name" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,11 +31,7 @@
             android:gravity="center"
             android:text="@string/moves"
             android:textColor="@color/text_secondary"
-            android:textSize="13sp"
-            android:shadowColor="#8022D3EE"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="8" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/time_text"
@@ -46,11 +41,7 @@
             android:gravity="center"
             android:text="@string/time"
             android:textColor="@color/text_secondary"
-            android:textSize="13sp"
-            android:shadowColor="#8022D3EE"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="8" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/best_text"
@@ -60,17 +51,13 @@
             android:gravity="center"
             android:text="@string/best"
             android:textColor="@color/text_secondary"
-            android:textSize="13sp"
-            android:shadowColor="#8022D3EE"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="8" />
+            android:textSize="13sp" />
     </LinearLayout>
 
     <View
+        android:id="@+id/accent_divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/accent_divider" />
+        android:layout_height="1dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -89,6 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:minWidth="200dp"
             android:text="@string/new_game" />
     </LinearLayout>
 
