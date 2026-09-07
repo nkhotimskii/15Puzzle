@@ -6,10 +6,10 @@
     <string name="time">ВРЕМЯ: %1$s</string>
     <string name="best">РЕКОРД: %1$s</string>
     <string name="new_game">Новая игра</string>
+    <string name="continue_playing">Продолжить</string>
 
     <string name="solved_title">Головоломка решена!</string>
     <string name="solved_message">Вы собрали головоломку за %1$d ходов за %2$s.</string>
-    <string name="ok">ОК</string>
 
     <string name="menu_difficulty">Сложность</string>
     <string name="menu_theme">Тема</string>

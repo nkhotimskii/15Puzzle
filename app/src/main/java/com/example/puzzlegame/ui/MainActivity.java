@@ -161,9 +161,12 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
             androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.solved_title)
                     .setMessage(getString(R.string.solved_message, moves, currentTime))
-                    .setPositiveButton(R.string.ok, (d, which) -> d.dismiss())
+                    .setPositiveButton(R.string.new_game, (d, which) -> viewModel.newGame())
+                    .setNegativeButton(R.string.continue_playing, (d, which) -> d.dismiss())
                     .show();
             dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE).setTextColor(currentAccent);
+            dialog.getButton(android.content.DialogInterface.BUTTON_NEGATIVE)
+                    .setTextColor(getColor(R.color.text_secondary));
         }, WIN_DIALOG_DELAY_MS);
     }
 
