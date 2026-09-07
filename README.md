@@ -4,6 +4,8 @@ A sliding-tile puzzle game for Android, written in Java.
 
 Slide the numbered tiles into the empty slot to arrange them in order from 1 to 15. Choose your difficulty, beat your best time, and track your statistics.
 
+![Image](15Puzzle.png)
+
 ## Features
 
 - **Multiple difficulties** — 3×3 (8-puzzle), 4×4 (15-puzzle) and 5×5 (24-puzzle)
