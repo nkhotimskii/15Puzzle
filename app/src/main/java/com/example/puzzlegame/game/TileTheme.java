@@ -13,8 +13,8 @@ import com.example.puzzlegame.R;
  * tiles stay distinguishable even on large boards.
  */
 public enum TileTheme {
-    YELLOW_GREEN(55f, 150f, R.string.theme_yellow_green, 0xFF00E676, R.style.Theme_PuzzleGame_YellowGreen),
     ORANGE_RED(28f, 0f, R.string.theme_orange_red, 0xFFFF6D00, R.style.Theme_PuzzleGame_OrangeRed),
+    YELLOW_GREEN(55f, 150f, R.string.theme_yellow_green, 0xFF00E676, R.style.Theme_PuzzleGame_YellowGreen),
     ROSE_PURPLE(348f, 265f, R.string.theme_rose_purple, 0xFFA78BFA, R.style.Theme_PuzzleGame_RosePurple);
 
     private final float hueStart;

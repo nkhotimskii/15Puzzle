@@ -2,7 +2,7 @@
     <!-- Base application theme (always dark). -->
     <style name="Base.Theme.PuzzleGame" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:fontFamily">@font/jetbrains_mono</item>
-        <item name="colorPrimary">@color/accent_green</item>
+        <item name="colorPrimary">@color/accent_orange</item>
         <item name="colorOnPrimary">@color/on_accent</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="colorSurface">@color/surface</item>

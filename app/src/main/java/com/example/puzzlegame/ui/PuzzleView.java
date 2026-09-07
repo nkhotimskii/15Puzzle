@@ -54,8 +54,8 @@ public class PuzzleView extends View {
     private int[] tileColors;
     private String[] tileLabels;
     private Typeface numberTypeface;
-    private int accentColor = TileTheme.YELLOW_GREEN.getAccentColor();
-    private TileTheme theme = TileTheme.YELLOW_GREEN;
+    private int accentColor = TileTheme.ORANGE_RED.getAccentColor();
+    private TileTheme theme = TileTheme.ORANGE_RED;
 
     private float cellSize;
     private float boardLeft;
@@ -241,7 +241,7 @@ public class PuzzleView extends View {
         for (int v = 1; v < cellCount; v++) {
             float t = (v - 1) / (float) (cellCount - 1);
             float hue = theme.getHueStart() + t * (theme.getHueEnd() - theme.getHueStart());
-            float value = 0.88f + t * (0.60f - 0.88f);
+            float value = 0.84f + t * (0.58f - 0.84f);
             tileColors[v] = Color.HSVToColor(new float[]{hue, 0.68f, value});
             tileLabels[v] = String.valueOf(v);
         }

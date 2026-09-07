@@ -50,11 +50,11 @@ public class GameRepository {
     }
 
     public TileTheme getTileTheme() {
-        String name = prefs.getString(KEY_THEME, TileTheme.YELLOW_GREEN.name());
+        String name = prefs.getString(KEY_THEME, TileTheme.ORANGE_RED.name());
         try {
             return TileTheme.valueOf(name);
         } catch (IllegalArgumentException e) {
-            return TileTheme.YELLOW_GREEN;
+            return TileTheme.ORANGE_RED;
         }
     }
 

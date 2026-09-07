@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements PuzzleView.Listen
     private TextView bestText;
 
     private String currentTime = "0:00";
-    private int currentAccent = TileTheme.YELLOW_GREEN.getAccentColor();
+    private int currentAccent = TileTheme.ORANGE_RED.getAccentColor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
