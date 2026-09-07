@@ -69,8 +69,11 @@ public class PuzzleView extends View {
     private final Paint emptyBorderPaint = new Paint();
     private final Paint gridPaint = new Paint();
     private final Paint winPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint frameGlowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint framePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private final RectF scratch = new RectF();
+    private final RectF frameRect = new RectF();
 
     private Listener listener;
 
@@ -110,6 +113,9 @@ public class PuzzleView extends View {
 
         gridPaint.setStrokeWidth(1f);
 
+        frameGlowPaint.setStyle(Paint.Style.STROKE);
+        framePaint.setStyle(Paint.Style.STROKE);
+
         applyAccentColors();
 
         numberTypeface = ResourcesCompat.getFont(context, R.font.jetbrains_mono_bold);
@@ -137,6 +143,8 @@ public class PuzzleView extends View {
         tileBorderPaint.setColor(withAlpha(accentColor, 0x4D));
         emptyBorderPaint.setColor(withAlpha(accentColor, 0x26));
         gridPaint.setColor(withAlpha(accentColor, 0x18));
+        frameGlowPaint.setColor(withAlpha(accentColor, 0x26));
+        framePaint.setColor(withAlpha(accentColor, 0xE6));
     }
 
     private static int withAlpha(int color, int alpha) {
@@ -260,6 +268,7 @@ public class PuzzleView extends View {
         }
 
         drawGrid(canvas);
+        drawFrame(canvas);
 
         float gap = cellSize * GAP_FACTOR;
         float corner = cellSize * CORNER_FACTOR;
@@ -324,6 +333,19 @@ public class PuzzleView extends View {
         for (float y = boardTop; y <= bottom; y += step) {
             canvas.drawLine(boardLeft, y, right, y, gridPaint);
         }
+    }
+
+    private void drawFrame(Canvas canvas) {
+        float m = cellSize * 0.07f;
+        float radius = cellSize * 0.18f;
+        frameRect.set(boardLeft - m, boardTop - m,
+                boardLeft + cellSize * size + m, boardTop + cellSize * size + m);
+
+        frameGlowPaint.setStrokeWidth(cellSize * 0.04f);
+        canvas.drawRoundRect(frameRect, radius, radius, frameGlowPaint);
+
+        framePaint.setStrokeWidth(cellSize * 0.015f);
+        canvas.drawRoundRect(frameRect, radius, radius, framePaint);
     }
 
     private void drawEmptyCell(Canvas canvas, int index, float gap, float corner) {
