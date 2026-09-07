@@ -96,6 +96,6 @@ APK and runs the unit tests on every push and pull request.
 
 ## License
 
-The app source is provided as-is. The bundled **JetBrains Mono** font is licensed
+The app is licensed under the MIT License. The bundled **JetBrains Mono** font is licensed
 under the [SIL Open Font License, Version 1.1](licenses/JetBrainsMono-OFL.txt), which
 permits free commercial use.
