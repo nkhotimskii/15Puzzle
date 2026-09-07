@@ -7,13 +7,15 @@ Slide the numbered tiles into the empty slot to arrange them in order from 1 to 
 ## Features
 
 - **Multiple difficulties** — 3×3 (8-puzzle), 4×4 (15-puzzle) and 5×5 (24-puzzle)
+- **Three color themes** — Yellow & Green, Orange & Red, Rose & Purple
 - **Timer & best times** — per-difficulty best times persisted on the device
 - **Move counter** and a **win dialog** with your time and move count
-- **Two input modes** — tap a tile or swipe to slide it, with smooth slide animations
+- **Two input modes** — tap a tile or swipe to slide it, with smooth slide animations and a comet-tail trail
+- **Win celebration** — particle burst and shockwave effect on solving
 - **Statistics** — games played, games won, total moves and best times (with reset)
 - **Haptic & sound feedback** — optional, toggleable in Settings
 - **Game resume** — the in-progress game survives rotation and process death
-- **Dark Material 3 design** with a custom font, shadows and a cohesive color scheme
+- **Dark neon design** — custom font, glow effects and a cohesive color scheme
 - **Localized** — English and Russian
 - **No permissions, no ads, no analytics** — fully offline
 
@@ -77,7 +79,7 @@ keytool -genkey -v -keystore release.keystore -alias 15puzzle \
 
 ```
 app/src/main/java/com/example/puzzlegame/
-├── game/      Board, Difficulty, Direction, Move, GameViewModel, SoundManager
+├── game/      Board, Difficulty, Direction, Move, TileTheme, GameViewModel, SoundManager
 ├── data/      GameRepository, SavedGame
 └── ui/        MainActivity, PuzzleView, SettingsActivity, SingleLiveEvent
 ```

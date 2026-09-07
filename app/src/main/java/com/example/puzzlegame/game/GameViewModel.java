@@ -116,40 +116,8 @@ public class GameViewModel extends AndroidViewModel {
         return repository.isSoundEnabled();
     }
 
-    public void setSoundEnabled(boolean enabled) {
-        repository.setSoundEnabled(enabled);
-    }
-
     public boolean isHapticsEnabled() {
         return repository.isHapticsEnabled();
-    }
-
-    public void setHapticsEnabled(boolean enabled) {
-        repository.setHapticsEnabled(enabled);
-    }
-
-    // --- Statistics (read-only, for the settings screen) ---
-
-    public int getGamesPlayed() {
-        return repository.getGamesPlayed();
-    }
-
-    public int getGamesWon() {
-        return repository.getGamesWon();
-    }
-
-    public long getTotalMoves() {
-        return repository.getTotalMoves();
-    }
-
-    public long getBestTime(Difficulty d) {
-        return repository.getBestTime(d);
-    }
-
-    public void resetStatistics() {
-        repository.resetStatistics();
-        repository.resetBestTimes();
-        bestLiveData.setValue(bestTimeText());
     }
 
     /** Re-reads persisted values and refreshes the best-time display. */

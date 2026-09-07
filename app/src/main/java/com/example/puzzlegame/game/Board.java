@@ -74,10 +74,6 @@ public class Board {
         return tiles[index];
     }
 
-    public int get(int row, int col) {
-        return tiles[row * size + col];
-    }
-
     public int getEmptyIndex() {
         return emptyIndex;
     }
