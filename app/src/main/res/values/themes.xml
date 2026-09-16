@@ -1,0 +1,45 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme (always dark). -->
+    <style name="Base.Theme.PuzzleGame" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:fontFamily">@font/jetbrains_mono</item>
+        <item name="colorPrimary">@color/accent_orange</item>
+        <item name="colorOnPrimary">@color/on_accent</item>
+        <item name="colorSecondary">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:statusBarColor">@color/background</item>
+    </style>
+
+    <style name="Theme.PuzzleGame" parent="Base.Theme.PuzzleGame" />
+
+    <!-- Overflow menu popup: radio buttons must stay white in every theme. -->
+    <style name="Theme.PuzzleGame.Popup" parent="Base.Theme.PuzzleGame">
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlHighlight">@android:color/white</item>
+    </style>
+
+    <!-- Per-theme variants: only the accent (colorPrimary) changes. -->
+    <style name="Theme.PuzzleGame.YellowGreen" parent="Theme.PuzzleGame">
+        <item name="colorPrimary">@color/accent_green</item>
+        <item name="colorOnPrimary">@color/on_accent</item>
+    </style>
+
+    <style name="Theme.PuzzleGame.OrangeRed" parent="Theme.PuzzleGame">
+        <item name="colorPrimary">@color/accent_orange</item>
+        <item name="colorOnPrimary">@color/on_accent</item>
+    </style>
+
+    <style name="Theme.PuzzleGame.RosePurple" parent="Theme.PuzzleGame">
+        <item name="colorPrimary">@color/accent_violet</item>
+        <item name="colorOnPrimary">@color/on_accent</item>
+    </style>
+</resources>

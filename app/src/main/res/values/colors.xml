@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base palette -->
+    <color name="background">#0E1018</color>
+    <color name="surface">#161A26</color>
+
+    <!-- Text -->
+    <color name="text_primary">#E4E7F0</color>
+    <color name="text_secondary">#8A90A0</color>
+
+    <!-- Board -->
+    <color name="board_background">#13151F</color>
+    <color name="tile_empty">#1B1E2B</color>
+
+    <!-- Theme accents (harmonize with the tile themes) -->
+    <color name="accent_green">#00E676</color>
+    <color name="accent_orange">#FF6D00</color>
+    <color name="accent_violet">#A78BFA</color>
+    <color name="on_accent">#071318</color>
+</resources>

@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">15 Puzzle</string>
+    <string name="board_description">Игровое поле 15 Puzzle</string>
+
+    <string name="moves">ХОДЫ: %1$d</string>
+    <string name="time">ВРЕМЯ: %1$s</string>
+    <string name="best">РЕКОРД: %1$s</string>
+    <string name="new_game">Новая игра</string>
+    <string name="continue_playing">Продолжить</string>
+
+    <string name="solved_title">Головоломка решена!</string>
+    <string name="solved_message">Вы решили головоломку. Кол-во ходов: %1$d, время: %2$s.</string>
+
+    <string name="menu_difficulty">Сложность</string>
+    <string name="menu_theme">Тема</string>
+    <string name="menu_settings">Настройки</string>
+
+    <string name="difficulty_easy">3×3 (Легко)</string>
+    <string name="difficulty_normal">4×4 (Обычно)</string>
+    <string name="difficulty_hard">5×5 (Сложно)</string>
+
+    <string name="theme_yellow_green">Жёлто-зелёная</string>
+    <string name="theme_orange_red">Оранжево-красная</string>
+    <string name="theme_rose_purple">Розово-фиолетовая</string>
+
+    <string name="settings_title">Настройки</string>
+    <string name="sound">Звуковые эффекты</string>
+    <string name="haptics">Вибрация</string>
+    <string name="statistics">Статистика</string>
+    <string name="games_played">Сыграно игр: %1$d</string>
+    <string name="games_won">Побед: %1$d</string>
+    <string name="total_moves">Всего ходов: %1$d</string>
+    <string name="best_times">Рекорды</string>
+    <string name="best_times_none">Пока нет рекордов</string>
+    <string name="reset_stats">Сбросить статистику</string>
+    <string name="reset_stats_confirm">Сбросить всю статистику и рекорды?</string>
+</resources>
